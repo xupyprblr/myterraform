@@ -1,12 +1,4 @@
-variable "access_key" {
-     default = "<PUT IN YOUR AWS ACCESS KEY>"
-}
-variable "secret_key" {
-     default = "<PUT IN YOUR AWS SECRET KEY>"
-}
-variable "region" {
-     default = "us-east-2"
-}
+
 variable "availabilityZone" {
      default = "us-east-2a"
 }

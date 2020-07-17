@@ -1,33 +1,40 @@
-resource "aws_vpc" "My_VPC" {
+resource "aws_vpc" "Test_VPC" {
   cidr_block           = var.vpcCIDRblock
   instance_tenancy     = var.instanceTenancy 
   enable_dns_support   = var.dnsSupport 
   enable_dns_hostnames = var.dnsHostNames
 tags = {
-    Name = "My VPC"
+    Name = "Test VPC"
 }
-} # end resource
+} 
 # create the Subnet
-resource "aws_subnet" "My_VPC_Subnet" {
-  vpc_id                  = aws_vpc.My_VPC.id
+resource "aws_subnet" "Test_VPC_Subnet" {
+  vpc_id                  = aws_vpc.Test_VPC.id
   cidr_block              = var.subnetCIDRblock
   map_public_ip_on_launch = var.mapPublicIP 
   availability_zone       = var.availabilityZone
 tags = {
-   Name = "My VPC Subnet"
+   Name = "Test VPC Subnet"
 }
-} # end resource
+} 
 # Create the Security Group
-resource "aws_security_group" "My_VPC_Security_Group" {
-  vpc_id       = aws_vpc.My_VPC.id
-  name         = "My VPC Security Group"
-  description  = "My VPC Security Group"
+resource "aws_security_group" "Tedt_VPC_Security_Group" {
+  vpc_id       = aws_vpc.Test_VPC.id
+  name         = "Test VPC Security Group"
+  description  = "Test VPC Security Group"
   
   # allow ingress of port 22
   ingress {
     cidr_blocks = var.ingressCIDRblock  
     from_port   = 22
     to_port     = 22
+    protocol    = "tcp"
+  } 
+  # allow ingress of port 80
+  ingress {
+    cidr_blocks = var.ingressCIDRblock  
+    from_port   = 80
+    to_port     = 80
     protocol    = "tcp"
   } 
   
@@ -39,14 +46,14 @@ resource "aws_security_group" "My_VPC_Security_Group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 tags = {
-   Name = "My VPC Security Group"
-   Description = "My VPC Security Group"
+   Name = "Test VPC Security Group"
+   Description = "Test VPC Security Group"
 }
-} # end resource
+} 
 # create VPC Network access control list
-resource "aws_network_acl" "My_VPC_Security_ACL" {
-  vpc_id = aws_vpc.My_VPC.id
-  subnet_ids = [ aws_subnet.My_VPC_Subnet.id ]
+resource "aws_network_acl" "Test_VPC_Security_ACL" {
+  vpc_id = aws_vpc.Test_VPC.id
+  subnet_ids = [ aws_subnet.Test_VPC_Subnet.id ]
 # allow ingress port 22
   ingress {
     protocol   = "tcp"
@@ -107,31 +114,31 @@ resource "aws_network_acl" "My_VPC_Security_ACL" {
     to_port    = 65535
   }
 tags = {
-    Name = "My VPC ACL"
+    Name = "Test VPC ACL"
 }
-} # end resource
+} 
 # Create the Internet Gateway
-resource "aws_internet_gateway" "My_VPC_GW" {
- vpc_id = aws_vpc.My_VPC.id
+resource "aws_internet_gateway" "Test_VPC_GW" {
+ vpc_id = aws_vpc.Test_VPC.id
  tags = {
-        Name = "My VPC Internet Gateway"
+        Name = "Test VPC Internet Gateway"
 }
-} # end resource
+} 
 # Create the Route Table
-resource "aws_route_table" "My_VPC_route_table" {
- vpc_id = aws_vpc.My_VPC.id
+resource "aws_route_table" "Test_VPC_route_table" {
+ vpc_id = aws_vpc.Test_VPC.id
  tags = {
-        Name = "My VPC Route Table"
+        Name = "Test VPC Route Table"
 }
-} # end resource
+}
 # Create the Internet Access
-resource "aws_route" "My_VPC_internet_access" {
-  route_table_id         = aws_route_table.My_VPC_route_table.id
+resource "aws_route" "Test_VPC_internet_access" {
+  route_table_id         = aws_route_table.Test_VPC_route_table.id
   destination_cidr_block = var.destinationCIDRblock
-  gateway_id             = aws_internet_gateway.My_VPC_GW.id
-} # end resource
+  gateway_id             = aws_internet_gateway.Test_VPC_GW.id
+} 
 # Associate the Route Table with the Subnet
-resource "aws_route_table_association" "My_VPC_association" {
-  subnet_id      = aws_subnet.My_VPC_Subnet.id
-  route_table_id = aws_route_table.My_VPC_route_table.id
-} # end resource
+resource "aws_route_table_association" "Test_VPC_association" {
+  subnet_id      = aws_subnet.Test_VPC_Subnet.id
+  route_table_id = aws_route_table.Test_VPC_route_table.id
+} 
